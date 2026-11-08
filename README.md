@@ -23,19 +23,18 @@
 
 ---
 
-## Sobre o projeto
+## O que é o Sintonize
 
-O Sintonize é um addon para o Nuvio que roda como Cloudflare Worker. Ele reúne em um único manifesto catálogos e fontes de outros addons compatíveis, e oferece um painel web para configurar o projeto.
+O Sintonize reúne um **addon** e um **collection** para ampliar e organizar sua experiência no Nuvio. O addon é um Cloudflare Worker pessoal: ele oferece recursos de catálogo e detalhes em português, permite administrar preferências no painel e, se você quiser, agrega catálogos e fontes de outros addons compatíveis em um único manifesto.
 
-Cada pessoa hospeda e administra sua própria instância na própria conta Cloudflare. O projeto também inclui um collection para organizar coleções dentro do Nuvio.
+O collection organiza as coleções dentro do Nuvio. O modelo incluído no projeto é processado pelo Worker para gerar um arquivo pronto, já adaptado ao endereço da sua instância. Assim, o addon e o collection trabalham em conjunto: o addon fornece os recursos e o collection organiza a apresentação das coleções no Nuvio.
 
-## Como funciona
+## Como usar addon e collection
 
-1. O Worker oferece o addon e conecta os addons compatíveis que você configurar.
-2. O KV da Cloudflare armazena configurações e cache.
-3. O TMDB fornece dados como títulos, capas e sinopses.
-4. O painel permite administrar addons e preferências e gerar o collection pronto.
-5. No Nuvio, adicione o manifesto do Worker e importe o collection gerado.
+Para a experiência integrada e mais versátil do Sintonize, use o manifesto do seu Worker junto com o collection gerado pelo painel. O tutorial explica a configuração completa, do início ao teste no Nuvio.
+
+> [!NOTE]
+> Conectar outros addons pelo agregador do painel é opcional. Se preferir, você pode adicionar addons compatíveis diretamente ao Nuvio, cada um separadamente. O collection do Sintonize continua sendo o arquivo que organiza as coleções; para usar a experiência completa do Sintonize, adicione também o manifesto do seu Worker.
 
 > [!TIP]
 > Não precisa programar: siga o [tutorial completo](TUTORIAL.md), que explica a configuração passo a passo.
@@ -48,12 +47,21 @@ Cada pessoa hospeda e administra sua própria instância na própria conta Cloud
 2. Consulte o código do Worker em [`worker.js`](worker.js).
 3. Consulte o modelo do collection em [`collection-template.json`](collection-template.json).
 
+## O que compõe o projeto
+
+| Parte | Função |
+|---|---|
+| **Addon Sintonize** | Roda como Cloudflare Worker, oferece recursos em português e administra preferências. Opcionalmente, agrega addons compatíveis no manifesto do Sintonize. |
+| **Collection Sintonize** | Organiza as coleções no Nuvio. O painel gera uma cópia pronta com o endereço do Worker de cada pessoa. |
+| **Painel** | Permite configurar os addons e preferências e gerar o collection pronto para importar. |
+| **KV** | Armazena configurações e cache do Worker na Cloudflare. |
+
 ## Arquivos do projeto
 
 | Arquivo | Para que serve |
 |---|---|
 | [`worker.js`](worker.js) | Código principal executado como Cloudflare Worker. |
-| [`collection-template.json`](collection-template.json) | Modelo de collection que o painel transforma em um arquivo pronto com o endereço do Worker de cada pessoa. |
+| [`collection-template.json`](collection-template.json) | Modelo de collection transformado pelo painel em um arquivo pronto para o Nuvio. |
 | [`TUTORIAL.md`](TUTORIAL.md) | Tutorial completo de configuração e uso, em português do Brasil. |
 | `assets/` | Banners SVG usados nesta documentação. |
 
