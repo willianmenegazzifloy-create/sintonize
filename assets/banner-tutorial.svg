@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">Tutorial Sintonize — passo a passo</title>
+  <desc id="desc">Do zero ao Sintonize no Nuvio. Cerca de 40 minutos. Sem programar.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1b1030"/>
+      <stop offset=".58" stop-color="#5b3f8f"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="1200" height="300" rx="24"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect width="1200" height="300" fill="url(#bg)"/>
+    <circle cx="1080" cy="150" r="190" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
+    <circle cx="1080" cy="150" r="145" fill="none" stroke="#fff" stroke-opacity=".1" stroke-width="2"/>
+    <circle cx="1080" cy="150" r="100" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="2"/>
+    <circle cx="1010" cy="74" r="4" fill="#fff" fill-opacity=".45"/>
+    <circle cx="1152" cy="220" r="3" fill="#fff" fill-opacity=".5"/>
+    <text x="64" y="72" fill="#e9ddff" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="4">TUTORIAL · PASSO A PASSO</text>
+    <text x="64" y="151" fill="#fff" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="43" font-weight="750">Do zero ao Sintonize no Nuvio</text>
+    <text x="64" y="198" fill="#f4f0ff" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="23">Cerca de 40 minutos. Sem programar.</text>
+    <rect x="64" y="225" width="150" height="48" rx="24" fill="#a78bfa"/>
+    <text x="139" y="256" text-anchor="middle" fill="#21163a" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="17" font-weight="800" letter-spacing="1">12 PARTES</text>
+  </g>
+</svg>
