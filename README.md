@@ -71,6 +71,10 @@ Cada pessoa hospeda e administra sua própria instância na própria conta Cloud
 > [!WARNING]
 > Nunca coloque a senha de admin (`ADMIN_PASSWORD`) nem a chave do TMDB (`TMDB_API_KEY`) em nenhum arquivo do repositório, print ou mensagem. Elas ficam somente nos secrets do Cloudflare. Não compartilhe o endereço `/admin` com quem você não quer que administre seu Sintonize.
 
+## Licença
+
+O código deste projeto é distribuído sob a [Licença MIT](LICENSE). Consulte também a [explicação em português](LICENCA.md). A licença não concede direitos sobre marcas, serviços ou conteúdos de terceiros.
+
 ---
 
 <p align="center"><img src="assets/banner-obrigado.svg" width="100%" alt="Obrigado por estar aqui. Com carinho, WillianFloy."></p>
