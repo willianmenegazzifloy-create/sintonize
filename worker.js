@@ -1,6 +1,6 @@
 // ============================================================================
 // SINTONIZE — Worker modelo (cada pessoa hospeda o seu na própria Cloudflare)
-// Versão 1.0.0
+// Versão 1.0.1
 //
 // O QUE VOCÊ PRECISA CONFIGURAR NA CLOUDFLARE (o tutorial explica passo a passo):
 //   Secrets (Settings > Variables and secrets):
@@ -25,6 +25,9 @@
 // ============================================================================
 
 const VERSION = '1.0.1';
+
+// Arquivo público do repositório que informa a versão mais recente. Não precisa mudar.
+const VERSION_URL = 'https://raw.githubusercontent.com/willianmenegazzifloy-create/sintonize/main/version.json';
 
 // Linha ORIGIN: catálogo público do Nuvio, usado como reserva para detalhes.
 const ORIGIN = 'https://catalog.nuvio.tv/%7B%22language%22%3A%22pt-BR%22%2C%22region%22%3A%22BR%22%7D';
@@ -579,6 +582,39 @@ async function collectionRoute(url, request, env) {
 }
 
 // ---------- Página de status (/) ----------
+// ---------- Aviso de atualização ----------
+
+function compareVersions(a, b) {
+  const pa = String(a).split('.').map((n) => parseInt(n, 10) || 0);
+  const pb = String(b).split('.').map((n) => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const x = pa[i] || 0;
+    const y = pb[i] || 0;
+    if (x !== y) return x > y ? 1 : -1;
+  }
+  return 0;
+}
+
+// Lê o version.json do GitHub no máximo a cada 6 horas (usa o KV quando existe).
+// Se o GitHub estiver fora do ar, devolve null e o painel simplesmente não mostra aviso.
+async function latestVersionInfo(env, ctx) {
+  try {
+    return await cached(env, ctx, 'sintonize:version:v1', 6 * 3600, async () => {
+      const response = await fetch(VERSION_URL, { headers: { Accept: 'application/json' } });
+      if (!response.ok) return null;
+      const data = await response.json();
+      if (!data || typeof data.version !== 'string' || !/^\d+(\.\d+)*$/.test(data.version)) return null;
+      return {
+        version: data.version,
+        descricao: String(data.descricao || '').slice(0, 300),
+        download: String(data.download || '').slice(0, 300),
+      };
+    });
+  } catch (e) {
+    return null;
+  }
+}
+
 function homePage(env, origin) {
   const logo = logoUrl(env);
   const row = (label, ok) => `<li><span class="${ok ? 'ok' : 'no'}">${ok ? 'Pronto' : 'Faltando'}</span> ${label}</li>`;
@@ -646,7 +682,7 @@ return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name
 @media(max-width:600px){.partners{grid-template-columns:1fr}}
 </style></head><body>
 <section id="login" class="login glass"><div class="loginmark"><img src="${logo}" alt="Sintonize"><div><strong>SINTONIZE</strong><span>Central de administração</span></div></div><h1>Seu painel, em um só lugar.</h1><p>Entre com a senha administrativa do Worker para gerenciar addons e fontes.</p><label class="fieldlabel" for="password">Senha do administrador</label><input id="password" class="textinput" type="password" autocomplete="current-password" placeholder="Digite sua senha"><button class="btn primary full" id="loginBtn">Entrar no painel <span aria-hidden="true">→</span></button><div id="loginStatus" class="status"></div></section>
-<div id="app" class="shell hide"><aside class="sidebar"><div class="brand"><img src="${logo}" alt=""><div><strong>SINTONIZE</strong><span>ADMIN CONSOLE</span></div></div><div class="navlabel">Workspace</div><nav class="nav"><button class="navbtn active" data-tab="home"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="11" width="7" height="10" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>Visão geral</button><button class="navbtn" data-tab="addons"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 5.5v13A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h7"/></svg>Addons</button><button class="navbtn" data-tab="quality"><svg viewBox="0 0 24 24"><path d="M4 21v-7m0-4V3m8 18v-9m0-4V3m8 18v-5m0-4V3M2 14h4m4-6h4m4 6h4"/></svg>Qualidade</button><button class="navbtn" data-tab="languages"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>Idiomas</button><button class="navbtn" data-tab="templates"><svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>Apresentação</button><button class="navbtn" data-tab="collection"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14h6M9 17h4"/></svg>Collection</button><button class="navbtn" data-tab="backup"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></svg>Backup & ferramentas</button></nav><div class="sidebottom"><div class="connection"><i class="dot"></i>Worker conectado</div>As preferências são salvas no KV do Cloudflare.<div class="credit">Base de collection feita por <a href="${KAPTAIN_URL}" target="_blank" rel="noopener noreferrer">Kaptain</a></div></div></aside><main class="main"><header class="topbar"><div><div class="eyebrow">Sintonize / <span id="crumb">Visão geral</span></div><h1 id="pageTitle">Visão geral</h1><p id="pageDesc">Acompanhe e organize suas fontes em um só lugar.</p></div><div class="topactions"><span class="userpill"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Administrador</span><button class="btn primary" id="saveAll"><span class="savedot"></span><span id="saveAllLabel">Salvar tudo</span></button><button class="btn ghost" id="logout">Sair</button></div></header>
+<div id="updateBanner" style="display:none;position:sticky;top:0;z-index:50;padding:10px 16px;background:#1d1a0f;color:#ffe9a8;border-bottom:1px solid #554a1c;font:14px/1.5 system-ui,sans-serif"></div><div id="app" class="shell hide"><aside class="sidebar"><div class="brand"><img src="${logo}" alt=""><div><strong>SINTONIZE</strong><span>ADMIN CONSOLE</span></div></div><div class="navlabel">Workspace</div><nav class="nav"><button class="navbtn active" data-tab="home"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="11" width="7" height="10" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>Visão geral</button><button class="navbtn" data-tab="addons"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21z"/><path d="M4 5.5v13A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h7"/></svg>Addons</button><button class="navbtn" data-tab="quality"><svg viewBox="0 0 24 24"><path d="M4 21v-7m0-4V3m8 18v-9m0-4V3m8 18v-5m0-4V3M2 14h4m4-6h4m4 6h4"/></svg>Qualidade</button><button class="navbtn" data-tab="languages"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>Idiomas</button><button class="navbtn" data-tab="templates"><svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>Apresentação</button><button class="navbtn" data-tab="collection"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14h6M9 17h4"/></svg>Collection</button><button class="navbtn" data-tab="backup"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></svg>Backup & ferramentas</button></nav><div class="sidebottom"><div class="connection"><i class="dot"></i>Worker conectado</div>As preferências são salvas no KV do Cloudflare.<div class="credit">Base de collection feita por <a href="${KAPTAIN_URL}" target="_blank" rel="noopener noreferrer">Kaptain</a></div></div></aside><main class="main"><header class="topbar"><div><div class="eyebrow">Sintonize / <span id="crumb">Visão geral</span></div><h1 id="pageTitle">Visão geral</h1><p id="pageDesc">Acompanhe e organize suas fontes em um só lugar.</p></div><div class="topactions"><span class="userpill"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Administrador</span><button class="btn primary" id="saveAll"><span class="savedot"></span><span id="saveAllLabel">Salvar tudo</span></button><button class="btn ghost" id="logout">Sair</button></div></header>
 <div id="page-home" class="page active"><div class="gridstats"><article class="glass stat"><span class="staticon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><div class="statlabel">Addons ativos</div><div class="statvalue" id="statActive">0</div><div class="statnote">Fontes no agregador</div></article><article class="glass stat"><span class="staticon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9h10M7 13h6"/></svg></span><div class="statlabel">Addons cadastrados</div><div class="statvalue" id="statTotal">0</div><div class="statnote">Ativos e pausados</div></article><article class="glass stat"><span class="staticon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 3H20v18H6.5A2.5 2.5 0 0 1 4 18.5v-13A2.5 2.5 0 0 1 6.5 3z"/></svg></span><div class="statlabel">Catálogos verificados</div><div class="statvalue" id="statCatalogs">—</div><div class="statnote">Dos testes desta sessão</div></article><article class="glass stat"><span class="staticon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div class="statlabel">Conexões testadas</div><div class="statvalue" id="statTests">—</div><div class="statnote" id="testHint">Teste addons para conferir</div></article></div><div class="contentgrid"><section class="glass panel"><div class="panelhead"><div><h2>Seus addons</h2><p>Visão rápida do que está conectado.</p></div><button class="btn small" data-goto="addons">Gerenciar →</button></div><div id="healthList" class="listrows"></div></section><section class="glass panel"><div class="panelhead"><div><h2>Preferências rápidas</h2><p>O que acontece com rótulos de baixa qualidade.</p></div></div><div id="quickRules" class="chips"></div><div class="hint" id="quickMode"></div><div style="margin-top:14px"><button class="btn small" data-goto="quality">Ajustar preferências</button></div></section></div><div class="hint">A lista pode priorizar ou ocultar fontes pelo rótulo. A reprodução automática da próxima fonte após uma falha ainda depende do player Nuvio.</div></div>
 <div id="page-addons" class="page"><section class="glass panel"><div class="panelhead"><div><h2>Parceiros recomendados</h2><p>Addons de fontes que recomendamos. Os dois são gratuitos e não usam TorBox. Abra o site, copie o seu link de manifesto e cole em “Conectar um addon”, logo abaixo.</p></div></div><div class="partners"><a class="partner" href="https://froststream.cloutteam.com/" target="_blank" rel="noopener noreferrer"><b>FrostStream</b><small>Gratuito. Não usa TorBox.</small><span class="go">Abrir site</span></a><a class="partner" href="https://fenixflix.fenixhub.online/" target="_blank" rel="noopener noreferrer"><b>FenixFlix</b><small>Gratuito. Não usa TorBox.</small><span class="go">Abrir site</span></a></div></section><section class="glass panel"><div class="panelhead"><div><h2>Conectar um addon</h2><p>Adicione o endereço do manifesto. O nome e os catálogos serão detectados automaticamente.</p></div><span class="statebadge">HTTPS</span></div><div class="addonform"><label class="fieldlabel" for="newAddonUrl">Endereço do addon</label><input id="newAddonUrl" class="textinput" type="url" placeholder="https://addon.exemplo/manifest.json" autocomplete="url"><button class="btn primary" id="addAddon">Validar e adicionar <span>→</span></button></div><div id="addStatus" class="status"></div></section><div class="sectiontitle"><div><h2>Minha biblioteca</h2><p>Ative, teste, reordene ou ajuste catálogos sem editar código.</p></div><div class="toolbar"><button class="btn small" id="testAll">Testar todos</button><button class="btn small primary" id="saveAddons">Salvar alterações</button></div></div><div class="searchrow"><input id="addonSearch" class="search" placeholder="Buscar addon"><select id="addonFilter" class="select"><option value="all">Todos os estados</option><option value="on">Ativos</option><option value="off">Pausados</option></select><select id="addonSort" class="select"><option value="order">Ordem manual</option><option value="name">Nome A–Z</option><option value="status">Status</option></select></div><div id="addonsList" class="addonlist"></div><div id="addonStatus" class="status"></div></div>
 <div id="page-quality" class="page"></div><div id="page-languages" class="page"></div>
@@ -825,6 +861,7 @@ $('#saveAll').onclick=async()=>{try{await persist()}catch(e){}};
 setInterval(()=>{if(saved)markDirty(snap()!==saved)},400);
 window.addEventListener('beforeunload',e=>{if(saved&&snap()!==saved){e.preventDefault();e.returnValue=''}});
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();$('#saveAll').click()}});
+;(async function checkUpdate(){try{var r=await fetch('/version-check',{cache:'no-store'});if(!r.ok)return;var d=await r.json();if(!d.updateAvailable)return;var box=document.getElementById('updateBanner');if(!box)return;box.innerHTML='<b>Nova versão do Sintonize disponível: '+esc(d.latest)+'</b> (você está na '+esc(d.current)+'). '+esc(d.descricao)+(d.download?' <a href=\"'+esc(d.download)+'\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#fff\">Ver como atualizar</a>':'');box.style.display='block'}catch(e){}})();
 </script></body></html>`;
 }
 
@@ -1860,6 +1897,19 @@ export default {
     }
 
     if (url.pathname === '/f') return await focusRoute(url, request);
+
+    if (url.pathname === '/version-check') {
+      const info = await latestVersionInfo(env, ctx);
+      const latest = info ? info.version : null;
+      const body = {
+        current: VERSION,
+        latest,
+        updateAvailable: !!latest && compareVersions(latest, VERSION) > 0,
+        descricao: info ? info.descricao : '',
+        download: info ? info.download : '',
+      };
+      return new Response(JSON.stringify(body), { headers: { ...JSON_HEADERS, 'Cache-Control': 'no-store' } });
+    }
 
     if (url.pathname === '/collection.json') {
       if (request.method !== 'GET' && request.method !== 'HEAD') return new Response('Método não permitido', { status: 405, headers: { Allow: 'GET, HEAD, OPTIONS' } });
