@@ -73,6 +73,12 @@ Painel da Cloudflare: [dash.cloudflare.com](https://dash.cloudflare.com)
 
 **Próxima:** [Parte 2: Pegar a chave do TMDB](#parte-2)
 
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
+
 ---
 
 <a id="parte-2"></a>
@@ -116,6 +122,12 @@ Painel da Cloudflare: [dash.cloudflare.com](https://dash.cloudflare.com)
 
 **Próxima:** [Parte 3: Pegar o código do Sintonize](#parte-3)
 
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
+
 ---
 
 <a id="parte-3"></a>
@@ -145,6 +157,12 @@ Alternativa: clique no ícone Download raw file (seta para baixo) para baixar o 
 > Você não precisa baixar o collection-template.json. O painel do seu Worker busca esse modelo sozinho, aqui do GitHub.
 
 **Próxima:** [Parte 4: Criar o Worker](#parte-4)
+
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
 
 ---
 
@@ -193,6 +211,12 @@ O Worker é o programa que roda o seu Sintonize na Cloudflare.
 
 **Próxima:** [Parte 5: Criar o KV (o armazenamento)](#parte-5)
 
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
+
 ---
 
 <a id="parte-5"></a>
@@ -215,6 +239,12 @@ O KV guarda a sua lista de addons, as preferências e o cache.
 **Passo 4:** Clique em Add ou Create.
 
 **Próxima:** [Parte 6: Ligar o KV ao Worker (binding)](#parte-6)
+
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
 
 ---
 
@@ -252,6 +282,12 @@ Esse passo faz o Worker enxergar o KV com o nome que o código espera.
 
 **Próxima:** [Parte 7: Criar as duas senhas (secrets)](#parte-7)
 
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
+
 ---
 
 <a id="parte-7"></a>
@@ -279,6 +315,12 @@ Secrets são valores escondidos. Depois de salvar, você não consegue ver de no
 
 **Próxima:** [Parte 8: Testar se está funcionando](#parte-8)
 
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
+
 ---
 
 <a id="parte-8"></a>
@@ -297,6 +339,12 @@ Se alguma aparecer como Faltando:
 - Depois de corrigir, espere alguns segundos e recarregue a página com Ctrl+F5.
 
 **Próxima:** [Parte 9: Entrar no painel e adicionar as fontes](#parte-9)
+
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
 
 ---
 
@@ -344,6 +392,12 @@ Se der erro ao validar, confira se o link está completo e termina em manifest.j
 
 **Próxima:** [Parte 10: Baixar o collection](#parte-10)
 
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
+
 ---
 
 <a id="parte-10"></a>
@@ -365,6 +419,12 @@ O collection organiza as coleções no Nuvio e já vem com o endereço do seu Wo
 > Se aparecer um erro, espere alguns minutos e tente de novo.
 
 **Próxima:** [Parte 11: Colocar tudo no Nuvio](#parte-11)
+
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
 
 ---
 
@@ -430,6 +490,12 @@ Se não aparecer nada, confira se o addon foi adicionado pelo manifest.json e se
 
 **Próxima:** [Parte 12: Personalizar (opcional)](#parte-12)
 
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
+
 ---
 
 <a id="parte-12"></a>
@@ -462,6 +528,12 @@ Entre em `https://NOME-DO-WORKER.SEU-SUBDOMINIO.workers.dev/admin` e explore à 
 > Use um link que não expire. Links do Discord expiram.
 
 **Próxima:** [Quando algo der errado](#quando-algo-der-errado)
+
+<p align="right">
+<a href="#topo">
+<img src="https://img.shields.io/badge/Voltar_ao_topo-⏫-blue?style=for-the-badge" alt="Voltar ao topo">
+</a>
+</p>
 
 ---
 
